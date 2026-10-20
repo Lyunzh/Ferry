@@ -4,3 +4,7 @@ Thumbs.db
 
 # Logs
 *.log
+
+# Local frontend dependencies and QA artifacts
+node_modules/
+artifacts/

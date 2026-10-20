@@ -8,7 +8,7 @@
 
 ### 0. 🎯 产品（`docs/product/`）
 
-存放已确认的产品愿景、玩家目标、游戏循环、范围和 PRD。当前为空，待具体游戏构思确认后建立。
+- [余额查询 Demo 关卡契约](docs/product/balance-demo.md)：玩法、结果编号、证据匹配、计时与结算。
 
 ### 1. 🏗️ 架构（`docs/architecture/`）
 
@@ -20,7 +20,7 @@
 
 ### 3. 🎨 前端与交互（`docs/frontend/`）
 
-存放界面、输入、交互流程、无障碍和视觉验收规范。
+- [Demo 前端结构](docs/frontend/balance-demo.md)：模块边界、响应式布局与交互。
 
 ### 4. 🔌 接口（`docs/interface/`）
 
@@ -32,7 +32,7 @@
 
 ### 6. 🛠️ 运维与发布（`docs/operations/`）
 
-存放本地开发、构建、发行、平台配置、故障处理和回滚流程。
+- [Demo 本地运行与验证](docs/operations/local-demo.md)：启动命令、自动化检查和浏览器验证记录。
 
 ## 🗂️ 文档维护规则
 

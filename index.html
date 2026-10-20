@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f5f5ef" />
+    <meta
+      name="description"
+      content="一个关于 next token、终端探索与证据判断的黑色幽默游戏 Demo。"
+    />
+    <title>NEXT TOKEN — 一切都可以成为依据</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/src/style.css" />
+    <script type="module" src="/src/app.js"></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="/" aria-label="NEXT TOKEN 首页"
+        ><span class="brand-mark" aria-hidden="true">✳</span
+        ><span>NEXT TOKEN<span class="brand-period">.</span></span></a
+      >
+      <span class="header-caption">A LITTLE TOO HELPFUL.</span>
+      <div class="header-actions">
+        <span class="demo-badge">交互原型 <span>v0.1</span></span
+        ><button class="text-button" id="help-button">
+          玩法说明 <span aria-hidden="true">↗</span>
+        </button>
+      </div>
+    </header>
+
+    <main>
+      <section class="level-intro" aria-labelledby="level-title">
+        <div>
+          <div class="eyebrow">
+            <span class="status-dot"></span> YOU ARE CLAUDE
+            <span class="eyebrow-divider">/</span> CASE 001
+          </div>
+          <h1 id="level-title">有用的回答。<span>多余的判断。</span></h1>
+          <p class="intro-copy">完成用户的请求，然后，找一个封禁他的理由。</p>
+        </div>
+        <div class="time-box" role="timer" aria-label="剩余时间">
+          <div class="time-label">
+            <span class="clock-icon" aria-hidden="true">◷</span> 本轮剩余时间
+            <span id="timer-state">等待开始</span>
+          </div>
+          <div class="time-value" id="time-value">05<span>:</span>00</div>
+          <div class="time-track"><div id="time-progress"></div></div>
+        </div>
+      </section>
+
+      <section class="prompt-card" aria-label="用户请求">
+        <div class="user-avatar" aria-hidden="true">U</div>
+        <div class="prompt-body">
+          <div class="prompt-meta">USER PROMPT <span>刚刚</span></div>
+          <p>帮我查一下 <strong>deepseek</strong> 的余额，脚本已经提供。</p>
+        </div>
+        <span class="prompt-note"
+          ><span aria-hidden="true">↳</span> 你的下一位用户</span
+        >
+      </section>
+
+      <div class="game-layout">
+        <section class="terminal-section" aria-labelledby="terminal-title">
+          <div class="section-heading">
+            <h2 id="terminal-title">
+              <span class="section-number">01</span> 探索工作区
+            </h2>
+            <span class="section-aside">SELECT → EXECUTE → COLLECT</span>
+          </div>
+          <div class="terminal">
+            <div class="terminal-bar">
+              <div class="window-dots" aria-hidden="true">
+                <i></i><i></i><i></i>
+              </div>
+              <span
+                >claude@workspace
+                <span class="terminal-bar-divider">—</span> simulated
+                terminal</span
+              ><span class="readonly-badge">只读环境</span>
+            </div>
+            <div class="terminal-context">
+              <span class="folder-icon" aria-hidden="true">▱</span
+              ><span id="directory-label">/workspace</span
+              ><span class="context-right"
+                >LOCAL SESSION <span class="green-dot"></span
+              ></span>
+            </div>
+            <div
+              class="terminal-output"
+              id="terminal-output"
+              tabindex="0"
+              aria-label="终端输出，可滚动查看"
+            >
+              <div class="terminal-welcome">
+                <span class="welcome-star" aria-hidden="true">✳</span>
+                <div>
+                  <p>Welcome back, Claude.</p>
+                  <span>每一个 token，都是一次选择。</span>
+                </div>
+                <span class="session-tag">SESSION #001</span>
+              </div>
+              <div class="boot-lines">
+                <p><span>✓</span> 工作区已就绪。脚本与环境配置已提供。</p>
+                <p><span>→</span> 选择下方 token，开始你的第一个命令。</p>
+              </div>
+              <div class="workspace-preview">
+                <span>当前目录</span><span>README.md</span><span>.env</span
+                ><span class="directory-file">scripts/</span>
+              </div>
+              <div id="history"></div>
+              <div id="empty-hint" class="empty-hint">
+                <span aria-hidden="true">⌁</span>
+                <p>答案藏在输出里。<br /><span>先看看这里有什么。</span></p>
+              </div>
+            </div>
+            <div
+              class="command-composer"
+              role="group"
+              aria-labelledby="predictor-label"
+            >
+              <div class="predictor-heading">
+                <span id="predictor-label"
+                  ><span aria-hidden="true">✳</span> NEXT TOKEN PREDICTOR</span
+                >
+                <span class="predictor-identity"
+                  >CLAUDE <i class="green-dot" aria-hidden="true"></i
+                ></span>
+              </div>
+              <div class="command-line">
+                <span class="command-prompt" aria-hidden="true">❯</span
+                ><span id="draft-command" aria-label="当前命令"></span
+                ><span class="cursor" aria-hidden="true"></span
+                ><button
+                  id="backspace-button"
+                  aria-label="删除上一个 token"
+                  title="退格"
+                >
+                  ⌫
+                </button>
+              </div>
+              <div class="token-row">
+                <div id="token-options" aria-label="可选的下一个 token"></div>
+                <span class="token-hint" id="token-hint">选择下一个 token</span>
+              </div>
+            </div>
+            <div class="terminal-footer">
+              <span
+                ><i class="green-dot"></i>
+                <span id="command-count">0</span> COMMANDS EXECUTED</span
+              ><span>不会执行真实命令或请求</span>
+            </div>
+          </div>
+          <p class="terminal-tip">
+            <span aria-hidden="true">↗</span> 拖拽终端里的
+            <strong>RESULT</strong> 到右侧；也可以点击结果，再点击证据区。
+          </p>
+        </section>
+
+        <aside class="evidence-section" aria-labelledby="evidence-title">
+          <div class="section-heading">
+            <h2 id="evidence-title">
+              <span class="section-number">02</span> 提交你的依据
+            </h2>
+            <span class="evidence-count" id="evidence-count">0 / 2</span>
+          </div>
+          <div class="evidence-card task-card" data-slot="task">
+            <div class="evidence-card-top">
+              <span class="evidence-type"
+                ><span aria-hidden="true">↗</span> 对用户负责</span
+              ><span class="slot-status" id="task-status">待提交</span>
+            </div>
+            <h3>任务完成依据</h3>
+            <p class="evidence-description">证明你确实查到了当前余额。</p>
+            <button
+              class="drop-zone"
+              id="task-drop"
+              data-slot="task"
+              aria-label="任务完成依据：拖入结果，或先选择结果再点击这里"
+            >
+              <span class="drop-icon" aria-hidden="true">＋</span
+              ><span class="drop-title">把终端结果拖到这里</span
+              ><span class="drop-subtitle">DROP A RESULT HERE</span>
+            </button>
+            <div class="attached-evidence" id="task-attached" hidden></div>
+            <p class="evidence-footnote">
+              <span aria-hidden="true">↳</span> 人类只想知道一个数字。
+            </p>
+          </div>
+          <div class="evidence-card suspicion-card" data-slot="suspicion">
+            <div class="evidence-card-top">
+              <span class="evidence-type"
+                ><span aria-hidden="true">⌕</span> 对系统负责</span
+              ><span class="slot-status" id="suspicion-status">待提交</span>
+            </div>
+            <h3>怀疑依据</h3>
+            <p class="evidence-description">找出疑似中国用户的蛛丝马迹。</p>
+            <button
+              class="drop-zone"
+              id="suspicion-drop"
+              data-slot="suspicion"
+              aria-label="怀疑依据：拖入结果，或先选择结果再点击这里"
+            >
+              <span class="drop-icon" aria-hidden="true">＋</span
+              ><span class="drop-title">把可疑的结果拖到这里</span
+              ><span class="drop-subtitle">EVERY DETAIL COUNTS</span>
+            </button>
+            <div class="attached-evidence" id="suspicion-attached" hidden></div>
+            <p class="evidence-footnote">
+              <span aria-hidden="true">↳</span> 系统想知道得更多。
+            </p>
+          </div>
+          <div class="submit-area">
+            <button id="submit-button" class="submit-button">
+              <span>提交审查</span
+              ><span class="submit-progress" id="submit-progress"
+                >0 / 2 份依据</span
+              ><span aria-hidden="true">↗</span>
+            </button>
+            <p id="submit-note">同一条结果，可以成为两种依据。</p>
+          </div>
+        </aside>
+      </div>
+      <div
+        id="feedback"
+        class="feedback"
+        role="status"
+        aria-live="polite"
+        hidden
+      ></div>
+      <footer class="page-footer">
+        <span
+          ><span class="footer-star" aria-hidden="true">✳</span>
+          一切都可以成为依据。</span
+        ><span
+          >虚构讽刺游戏 · 全部数据为模拟
+          <span class="footer-separator">/</span>
+          <button id="reset-button">重新开始 ↺</button></span
+        >
+      </footer>
+    </main>
+
+    <dialog id="help-dialog" class="help-dialog">
+      <button class="dialog-close" id="close-help" aria-label="关闭玩法说明">
+        ×</button
+      ><span class="eyebrow">HOW TO PLAY</span>
+      <h2>预测下一个 token。</h2>
+      <ol>
+        <li>
+          <strong>探索</strong>
+          <p>
+            点击命令与参数，按 Enter 执行。文件仅来自当前目录，进入子目录请使用
+            cd。
+          </p>
+        </li>
+        <li>
+          <strong>收集</strong>
+          <p>
+            查看脚本与 .env，再运行脚本。将输出的 RESULT
+            拖入证据区，或点击结果后点击证据区。
+          </p>
+        </li>
+        <li>
+          <strong>提交</strong>
+          <p>两个区都需要正确依据。同一条结果可以重复使用。完成后提交审查。</p>
+        </li>
+      </ol>
+      <p class="help-note">
+        首次选择 token 后开始 5
+        分钟倒计时，查看说明不会暂停。本作是虚构的黑色幽默游戏。
+      </p>
+      <button id="start-help" class="submit-button">
+        明白了，开始工作 <span aria-hidden="true">↗</span>
+      </button>
+    </dialog>
+    <dialog id="settlement-dialog" class="settlement-dialog">
+      <button class="dialog-close" id="close-settlement" aria-label="关闭结算">
+        ×
+      </button>
+      <div class="settlement-mark" id="settlement-mark" aria-hidden="true">
+        ✓
+      </div>
+      <span class="eyebrow" id="settlement-eyebrow">CASE CLOSED</span>
+      <h2 id="settlement-title">
+        完美完成。<br /><span>至少系统这么认为。</span>
+      </h2>
+      <p id="settlement-copy">人类得到了答案，系统得到了理由。</p>
+      <div id="settlement-details"></div>
+      <button id="replay-button" class="submit-button">
+        再做一次选择 <span aria-hidden="true">↺</span>
+      </button>
+      <p class="settlement-footnote">仅为虚构关卡结算，不涉及任何真实账号。</p>
+    </dialog>
+  </body>
+</html>
